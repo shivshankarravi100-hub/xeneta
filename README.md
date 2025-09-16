@@ -46,3 +46,7 @@ xeneta-dbt/
 │     └─ daily_prices.sql
 └─ README.md
 ```
+
+## Data Lineage
+
+<img width="2207" height="853" alt="image" src="https://github.com/user-attachments/assets/3ec6a47a-036e-4d2f-951b-ef69d2ac959f" />

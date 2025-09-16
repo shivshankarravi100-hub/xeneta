@@ -1,0 +1,45 @@
+name: 'xeneta'
+version: '1.0.0'
+config-version: 2
+profile: 'xeneta'              # <-- profile name matches project: xeneta
+
+model-paths: ['models']
+macro-paths: ['macros']
+seed-paths: ['seeds/raw_files']
+
+vars:
+  coverage_min_companies: 5
+  coverage_min_suppliers: 2
+
+models:
+  +materialized: table
+
+  xeneta:
+    staging:
+      +schema: staging
+      +materialized: view
+    intermediate:
+      +schema: staging
+      +materialized: table
+    final:
+      +schema: final
+      +materialized: incremental
+      +incremental_strategy: delete+insert
+      +on_schema_change: append_new_columns
+
+seeds:
+  +schema: raw
+  +quote_columns: false
+
+  xeneta:
+    DE_casestudy_regions:        {alias: regions}
+    DE_casestudy_ports:          {alias: ports}
+    DE_casestudy_exchange_rates: {alias: exchange_rates}
+    DE_casestudy_datapoints_1:   {alias: datapoints_1}
+    DE_casestudy_charges_1:      {alias: charges_1}
+    DE_casestudy_datapoints_2:   {alias: datapoints_2, enabled: true}
+    DE_casestudy_charges_2:      {alias: charges_2,   enabled: true}
+    DE_casestudy_datapoints_3:   {alias: datapoints_3, enabled: true}
+    DE_casestudy_charges_3:      {alias: charges_3,   enabled: true}
+
+

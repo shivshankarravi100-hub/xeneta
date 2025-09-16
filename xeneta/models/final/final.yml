@@ -1,0 +1,98 @@
+version: 2
+
+
+models:
+  - name: daily_prices
+    description: "{{ doc('doc__final_overview') }}"
+    columns:
+      - name: day
+        description: "{{ doc('doc__final_day') }}"
+        tests:
+          - not_null
+
+      - name: equipment_id
+        description: "{{ doc('doc__final_equipment_id') }}"
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: 'between 1 and 6'
+
+      - name: origin_location
+        description: "{{ doc('doc__final_origin_location') }}"
+        tests:
+          - not_null
+
+      - name: destination_location
+        description: "{{ doc('doc__final_destination_location') }}"
+        tests:
+          - not_null
+
+      - name: location_type
+        description: "{{ doc('doc__final_location_type') }}"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['port', 'region', 'parent_region']
+
+      - name: total_contracts
+        description: "{{ doc('doc__final_total_contracts') }}"
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: '>= 0'
+
+      - name: company_count
+        description: "{{ doc('doc__final_company_count') }}"
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: '>= 0'
+
+      - name: supplier_count
+        description: "{{ doc('doc__final_supplier_count') }}"
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: '>= 0'
+
+      - name: avg_price_usd
+        description: "{{ doc('doc__final_avg_price_usd') }}"
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: '> 0'
+
+      - name: median_price_usd
+        description: "{{ doc('doc__final_median_price_usd') }}"
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: '> 0'
+
+      - name: min_price_usd
+        description: "{{ doc('doc__final_min_price_usd') }}"
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: '> 0'
+
+      - name: max_price_usd
+        description: "{{ doc('doc__final_max_price_usd') }}"
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: '> 0'
+
+      - name: dq_ok
+        description: "{{ doc('doc__final_dq_ok') }}"
+        tests:
+          - not_null
+
+      - name: generated_at
+        description: "{{ doc('doc__final_generated_at') }}"
+        tests:
+          - not_null
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [day, equipment_id, origin_location, destination_location, location_type]
+

@@ -1,0 +1,39 @@
+version: 2
+
+# -------------------- Sources --------------------
+sources:
+  - name: raw_stg_ports
+    schema: raw
+    tables:
+      - name: ports
+
+# --------------------- Model ---------------------
+models:
+  - name: stg_ports
+    description: "{{ doc('doc__stg_ports_overview') }}"
+    columns:
+      - name: pid
+        description: "{{ doc('doc__stg_ports_pid') }}"
+        tests:
+          - unique
+          - not_null
+      - name: code
+        description: "{{ doc('doc__stg_ports_code') }}"
+        tests:
+          - unique
+      - name: name
+        description: "{{ doc('doc__stg_ports_name') }}"
+      - name: region_slug
+        description: "{{ doc('doc__stg_ports_region_slug') }}"
+        tests:
+          - relationships:
+              to: ref('stg_regions')
+              field: slug
+              column_name: region_slug
+      - name: country
+        description: "{{ doc('doc__stg_ports_country') }}"
+      - name: country_code
+        description: "{{ doc('doc__stg_ports_country_code') }}"
+      - name: loaded_at
+        description: "{{ doc('doc__stg_ports_loaded_at') }}"
+

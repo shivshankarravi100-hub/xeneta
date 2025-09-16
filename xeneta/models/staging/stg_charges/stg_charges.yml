@@ -1,0 +1,37 @@
+version: 2
+# -------------------- Sources --------------------
+sources:
+  - name: raw_stg_charges
+    schema: raw
+    tables:
+      - name: charges_1
+      - name: charges_2
+      - name: charges_3
+  
+
+# --------------------- Model ---------------------
+
+
+models:
+  - name: stg_charges
+    description: "{{ doc('doc__stg_charges_overview') }}"
+    columns:
+      - name: d_id
+        description: "{{ doc('doc__stg_charges_d_id') }}"
+        tests:
+          - not_null
+      - name: currency
+        description: "{{ doc('doc__stg_charges_currency') }}"
+        tests:
+          - not_null
+      - name: value
+        description: "{{ doc('doc__stg_charges_value') }}"
+      - name: loaded_at
+        description: "{{ doc('doc__stg_charges_loaded_at') }}"
+    tests:
+      - relationships:
+          to: ref('stg_datapoints')
+          field: d_id
+          column_name: d_id
+
+

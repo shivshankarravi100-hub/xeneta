@@ -1,0 +1,73 @@
+version: 2
+
+models:
+  - name: int_charges_usd
+    description: "{{ doc('doc__int_overview') }}"
+    columns:
+      - name: d_id
+        description: "{{ doc('doc__stg_dp_d_id') }}"
+      - name: day
+        description: "{{ doc('doc__int_day') }}"
+      - name: currency
+        description: "{{ doc('doc__int_currency') }}"
+      - name: value
+        description: "{{ doc('doc__int_value') }}"
+      - name: value_usd
+        description: "{{ doc('doc__int_value_usd') }}"
+      - name: transformed_at
+        description: "{{ doc('doc__int_transformed_at') }}"
+    tests:
+      - relationships:
+          to: ref('stg_datapoints')
+          field: d_id
+          column_name: d_id
+
+
+  - name: int_datapoints_with_charges
+    description: "{{ doc('doc__int_overview') }}"
+    columns:
+      - name: d_id
+        description: "{{ doc('doc__stg_dp_d_id') }}"
+      - name: day
+        description: "{{ doc('doc__int_day') }}"
+      - name: created_at
+        description: "Original created timestamp."
+      - name: valid_from
+        description: "Contract start (inclusive)."
+      - name: valid_to
+        description: "Contract end (inclusive)."
+      - name: origin_pid
+        description: "Origin port id."
+      - name: destination_pid
+        description: "Destination port id."
+      - name: company_id
+        description: "Company identifier."
+      - name: supplier_id
+        description: "Supplier identifier."
+      - name: equipment_id
+        description: "Equipment type id (1..6)."
+      - name: total_charge_usd
+        description: "{{ doc('doc__int_total_charge_usd') }}"
+      - name: charges_total
+        description: "{{ doc('doc__int_charges_total') }}"
+      - name: charges_converted
+        description: "{{ doc('doc__int_charges_converted') }}"
+      - name: transformed_at
+        description: "{{ doc('doc__int_transformed_at') }}"
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [d_id, day]
+      - dbt_utils.expression_is_true:
+          expression: "total_charge_usd > 0"
+      - dbt_utils.expression_is_true:
+          expression: "charges_total = charges_converted"
+      - dbt_utils.expression_is_true:
+          expression: "origin_pid != destination_pid"
+      - relationships:
+          to: ref('stg_ports')
+          field: pid
+          column_name: origin_pid
+      - relationships:
+          to: ref('stg_ports')
+          field: pid
+          column_name: destination_pid

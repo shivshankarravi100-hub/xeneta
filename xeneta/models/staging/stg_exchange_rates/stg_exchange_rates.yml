@@ -1,0 +1,29 @@
+version: 2
+
+# -------------------- Sources --------------------
+sources:
+  - name: raw_stg_exchange_rates
+    schema: raw
+    tables:
+      - name: exchange_rates
+
+# --------------------- Model ---------------------
+models:
+  - name: stg_exchange_rates
+    description: "{{ doc('doc__stg_fx_overview') }}"
+    columns:
+      - name: day
+        description: "{{ doc('doc__stg_fx_day') }}"
+        tests:
+          - not_null
+      - name: currency
+        description: "{{ doc('doc__stg_fx_currency') }}"
+        tests:
+          - not_null
+      - name: rate
+        description: "{{ doc('doc__stg_fx_rate') }}"
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: '> 0'
+      - name: loaded_at
+        description: "{{ doc('doc__stg_fx_loaded_at') }}"

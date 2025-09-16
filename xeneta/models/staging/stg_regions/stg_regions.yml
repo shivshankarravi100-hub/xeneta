@@ -1,0 +1,30 @@
+version: 2
+
+# -------------------- Sources --------------------
+sources:
+  - name: raw_stg_regions
+    schema: raw
+    tables:
+      - name: regions
+
+# --------------------- Model ---------------------
+models:
+  - name: stg_regions
+    description: "{{ doc('doc__stg_regions_overview') }}"
+    columns:
+      - name: slug
+        description: "{{ doc('doc__stg_regions_slug') }}"
+        tests:
+          - not_null
+          - unique
+      - name: name
+        description: "{{ doc('doc__stg_regions_name') }}"
+      - name: parent_slug
+        description: "{{ doc('doc__stg_regions_parent_slug') }}"
+        tests:
+          - relationships: 
+              to: ref('stg_regions')
+              field: slug
+              column_name: parent_slug
+      - name: loaded_at
+        description: "{{ doc('doc__stg_regions_loaded_at') }}"

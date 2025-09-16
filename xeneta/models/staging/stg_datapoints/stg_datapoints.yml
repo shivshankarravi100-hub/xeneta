@@ -1,0 +1,63 @@
+version: 2
+# -------------------- Sources --------------------
+sources:
+  - name: raw_stg_datapoints
+    schema: raw
+    tables:
+      - name: datapoints_1
+      - name: datapoints_2
+      - name: datapoints_3
+
+# --------------------- Model ---------------------
+
+models:
+  - name: stg_datapoints
+    description: "{{ doc('doc__stg_datapoints_overview') }}"
+    columns:
+      - name: d_id
+        description: "{{ doc('doc__stg_dp_d_id') }}"
+        tests:
+          - not_null
+          - unique
+
+      - name: created_at
+        description: "{{ doc('doc__stg_dp_created_at') }}"
+
+      - name: valid_from
+        description: "{{ doc('doc__stg_dp_valid_from') }}"
+
+      - name: valid_to
+        description: "{{ doc('doc__stg_dp_valid_to') }}"
+
+      - name: origin_pid
+        description: "{{ doc('doc__stg_dp_origin_pid') }}"
+        tests:
+          - relationships:
+              to: ref('stg_ports')
+              field: pid
+
+      - name: destination_pid
+        description: "{{ doc('doc__stg_dp_destination_pid') }}"
+        tests:
+          - relationships:
+              to: ref('stg_ports')
+              field: pid
+
+      - name: company_id
+        description: "{{ doc('doc__stg_dp_company_id') }}"
+
+      - name: supplier_id
+        description: "{{ doc('doc__stg_dp_supplier_id') }}"
+
+      - name: equipment_id
+        description: "{{ doc('doc__stg_dp_equipment_id') }}"
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: between 1 and 6
+
+      - name: loaded_at
+        description: "{{ doc('doc__stg_dp_loaded_at') }}"
+
+    tests:
+      - dbt_utils.expression_is_true:
+          expression: '"valid_from" <= "valid_to"'

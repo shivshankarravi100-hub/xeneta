@@ -1,0 +1,32 @@
+# dbt specific
+target/
+dbt_packages/
+logs/
+.user.yml
+profiles.yml
+
+# DuckDB
+*.duckdb
+*.duckdb.wal
+
+# Python virtual environment
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE specific
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.*
